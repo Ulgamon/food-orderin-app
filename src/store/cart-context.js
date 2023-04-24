@@ -2,24 +2,41 @@ import React, { useState, useEffect } from "react";
 
 const CartContext = React.createContext({
     options: [],
-    orders: {},
+    orders: [],
     orderPizza: () => {},
 })
 
 export const CartContextProvider = (props) => {
-    const [orders, setOrders] = useState('');
+    const [orders, setOrders] = useState([]);
 
     useEffect(() => {
         if (localStorage.getItem("pizzaOrders")) {
-            setOrders(localStorage.getItem("pizzaOrders"));
+            console.log(JSON.parse(localStorage.getItem("pizzaOrders")));
+            setOrders(JSON.parse(localStorage.getItem("pizzaOrders")));
         }
         else {
-            setOrders('');
+            setOrders([]);
         }
     }, []);
 
     const addPizza = (pizza, size, amount) => {
-        
+        for (let order in orders) {
+            if (pizza.name === orders[order].pizza.name && size === orders[order].size) {
+                console.log(size + orders[order].size);
+                setOrders(prevState => {
+                    const newIndex = prevState.findIndex(el => el.pizza.name === pizza.name && el.size === size);
+                    prevState[newIndex].amount += amount;
+                    localStorage.setItem("pizzaOrders", JSON.stringify(prevState));
+                    return prevState;
+                })
+                return;
+            }
+        }
+        setOrders((prevState) => {
+            localStorage.setItem("pizzaOrders", JSON.stringify([...prevState, {pizza: pizza, size: size, amount: amount}]));
+            return ([...prevState, {pizza: pizza, size: size, amount: amount}]);
+        });
+        console.log(orders);
     }
 
     return (
@@ -98,8 +115,8 @@ export const CartContextProvider = (props) => {
                         ingredients: "mozzarella, tomato, basil, olive oil, oregano" 
                     },
                 ],
-                orders: {},
-                orderPizza: () => {},
+                orders: orders,
+                orderPizza: addPizza,
             }}
         >
             {props.children}
