@@ -14,7 +14,7 @@ const CartItem = props => {
 
     return (
         <div 
-            className="w-11/12 p-2 flex flex-wrap justify-between hover:bg-stone-300 rounded-xl"
+            className="w-full mx-auto p-2 flex flex-wrap justify-between hover:bg-stone-300 rounded-xl"
         >
             <div className="w-1/2">
                 <p className="m-1">{props.order.pizza.name}</p>
