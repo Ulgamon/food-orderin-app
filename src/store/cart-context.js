@@ -4,18 +4,31 @@ const CartContext = React.createContext({
     options: [],
     orders: [],
     orderPizza: () => {},
+    numOfOrders: 0,
+    removeOne: (name, size) => {},
+    addOne: (name, size) => {},
 })
+
+const returnAmount = (orders) => {
+    let amountOfOrders = 0;
+    for (let i in orders) {
+        amountOfOrders += orders[i].amount;
+    };
+    return amountOfOrders;
+}
 
 export const CartContextProvider = (props) => {
     const [orders, setOrders] = useState([]);
+    const [numOfOrders, setNumOfOrders] = useState(returnAmount(orders));
 
     useEffect(() => {
         if (localStorage.getItem("pizzaOrders")) {
-            console.log(JSON.parse(localStorage.getItem("pizzaOrders")));
             setOrders(JSON.parse(localStorage.getItem("pizzaOrders")));
+            setNumOfOrders(returnAmount(JSON.parse(localStorage.getItem("pizzaOrders"))));
         }
         else {
             setOrders([]);
+            setNumOfOrders(0);
         }
     }, []);
 
@@ -26,6 +39,7 @@ export const CartContextProvider = (props) => {
                 setOrders(prevState => {
                     const newIndex = prevState.findIndex(el => el.pizza.name === pizza.name && el.size === size);
                     prevState[newIndex].amount += amount;
+                    setNumOfOrders(returnAmount(prevState));
                     localStorage.setItem("pizzaOrders", JSON.stringify(prevState));
                     return prevState;
                 })
@@ -34,9 +48,45 @@ export const CartContextProvider = (props) => {
         }
         setOrders((prevState) => {
             localStorage.setItem("pizzaOrders", JSON.stringify([...prevState, {pizza: pizza, size: size, amount: amount}]));
+            setNumOfOrders(returnAmount([...prevState, {pizza: pizza, size: size, amount: amount}]));
             return ([...prevState, {pizza: pizza, size: size, amount: amount}]);
         });
         console.log(orders);
+    }
+
+    const removeOne = (name, size) => {
+        let index = orders.findIndex(element => (element.pizza.name === name && element.size === size));
+        console.log(index);
+        if (index >= 0) {
+            setOrders(prevState => {
+                if (prevState[index].amount === 1) {
+                    prevState.splice(index, 1);
+                    console.log(prevState);
+                    setNumOfOrders(returnAmount(prevState));
+                    localStorage.setItem("pizzaOrders", JSON.stringify(prevState));
+                    return prevState;
+                }
+                prevState[index].amount -= 1;
+                console.log(prevState);
+                setNumOfOrders(returnAmount(prevState));
+                localStorage.setItem("pizzaOrders", JSON.stringify(prevState));
+                return [...prevState];
+            })
+        }
+    }
+
+    const addOne = (name, size) => {
+        let index = orders.findIndex(element => (element.pizza.name === name && element.size === size));
+        console.log(index);
+        if (index >= 0) {
+            setOrders(prevState => {
+                prevState[index].amount += 1;
+                console.log(prevState);
+                setNumOfOrders(returnAmount(prevState));
+                localStorage.setItem("pizzaOrders", JSON.stringify(prevState));
+                return [...prevState];
+            })
+        }
     }
 
     return (
@@ -117,6 +167,9 @@ export const CartContextProvider = (props) => {
                 ],
                 orders: orders,
                 orderPizza: addPizza,
+                numOfOrders: numOfOrders,
+                removeOne: removeOne,
+                addOne: addOne
             }}
         >
             {props.children}

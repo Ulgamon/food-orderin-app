@@ -23,7 +23,7 @@ const MenuItem = props => {
     const isValidInput = (e) => {
         if(e.target.value <= 0) {
             setIsValid({ valid: false, style:"bg-red-400"});
-            setAmount(0);
+            setAmount('');
             setCurrentPrice(0);
             return;
         }
@@ -44,8 +44,8 @@ const MenuItem = props => {
             <div className="text-stone-700 w-1/3 sm:w-3/4">
                 <p className="text-bold">{props.pizza.name}</p>
                 <p className="text-light italic text-sm sm:w-1/3">({props.pizza.ingredients})</p>
-                <p className="font-semibold text-stone-600">Price:  
-                    <strong className="font-semibold text-green-500 ms-1">{currentPrice.toFixed(2)}$</strong>
+                <p className="font-semibold text-stone-600 text-base sm:text-2xl">Price:  
+                    <strong className="font-semibold text-green-500 ms-0.5">{currentPrice.toFixed(2)}$</strong>
                 </p>
             </div>
             <form className="ms-auto p-0 m-0" onSubmit={submitHandler}>
