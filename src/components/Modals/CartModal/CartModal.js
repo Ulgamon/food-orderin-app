@@ -28,7 +28,7 @@ const ModalOverlay = props => {
                     <h3 className="ps-3">Your Orders:</h3>
                 </header>
                 <hr className="bg-stone-800 h-0.5 w-full border-0" />
-                <div className="p-5 bg-stone-200 text-xl max-h-64 overflow-y-auto">
+                <div className="p-5 bg-stone-200 text-xl max-h-64 sm:max-h-80 lg:max-h-96 overflow-y-auto">
                     {props.orders.length > 0 ? <CartList orders={props.orders} /> : <p>Your pizza box is empty &#128557;</p>}
                 </div>
                 <hr className="bg-stone-800 h-0.5 w-full border-0" />
