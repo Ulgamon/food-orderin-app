@@ -15,7 +15,7 @@ function App() {
   }
 
   return (
-    <div style={{backgroundImage:`url(${hero})`}} className='py-10 object-cover'>
+    <div style={{backgroundImage:`url(${hero})`}} className='py-10 object-cover min-h-screen'>
       {showCartModal ? <CartModal toggleCartModal={toggleCartModal}/> : ''}
       <Navbar toggleCartModal={toggleCartModal}/>
       <Hero />

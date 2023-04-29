@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 const CartContext = React.createContext({
     options: [],
@@ -7,6 +7,8 @@ const CartContext = React.createContext({
     numOfOrders: 0,
     removeOne: (name, size) => {},
     addOne: (name, size) => {},
+    error: null,
+    isLoading: false,
 })
 
 const returnAmount = (orders) => {
@@ -20,6 +22,9 @@ const returnAmount = (orders) => {
 export const CartContextProvider = (props) => {
     const [orders, setOrders] = useState([]);
     const [numOfOrders, setNumOfOrders] = useState(returnAmount(orders));
+    const [options, setOptions] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         if (localStorage.getItem("pizzaOrders")) {
@@ -31,6 +36,39 @@ export const CartContextProvider = (props) => {
             setNumOfOrders(0);
         }
     }, []);
+
+    const fetchMenu = useCallback(async () => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const response = await fetch('https://react-http-4bff2-default-rtdb.europe-west1.firebasedatabase.app/menu.json');
+            if (!response.ok) {
+                throw new Error("Error while fetching data");
+            };
+            const data = await response.json();
+            console.log(data);
+            const loadedOptions = [];
+            for (const key in data) {
+                loadedOptions.push({
+                    name: key.replace(/[']/g, ''),
+                    s: data[key].s,
+                    m: data[key].m,
+                    l: data[key].l,
+                    ingredients: data[key].ingredients,
+                })
+            }
+            console.log(loadedOptions);
+            setOptions(loadedOptions);
+        } catch(error) {
+            setError(error.message);
+        }
+        setIsLoading(false);
+    }, [])
+    
+
+    useEffect(() => {
+        fetchMenu();
+    }, [fetchMenu])
 
     const addPizza = (pizza, size, amount) => {
         for (let order in orders) {
@@ -92,84 +130,14 @@ export const CartContextProvider = (props) => {
     return (
         <CartContext.Provider
             value={{
-                options: [
-                    { 
-                        name: 'Pizza bufalina', 
-                        s: 9.99, 
-                        m: 14.99, 
-                        l: 22.99, 
-                        ingredients: "tomato sauce, mozzarella, cherry tomato, olive oil, basil" 
-                    },
-                    { 
-                        name: 'Prosciutto e funghi pizza',
-                        s: 8.99, 
-                        m: 12.99, 
-                        l: 20.99 ,
-                        ingredients: "tomato sauce, prosciutto cotto, mozzarella, mushrooms" 
-                    },
-                    { 
-                        name: 'Pizza al padellino', 
-                        s: 10.99, 
-                        m: 15.99, 
-                        l: 24.99 ,
-                        ingredients: "seared pumpkin, gorgonzola cheese, spreadable cheese, lime, cream" 
-                    },
-                    { 
-                        name: 'Pizza alla diavola', 
-                        s: 9.99, 
-                        m: 14.99, 
-                        l: 22.99 ,
-                        ingredients: "tomato sauce, salamino piccante, mozzarella, hot peppers, olives" 
-                    },
-                    { 
-                        name: 'Pizza capricciosa', 
-                        s: 7.99, 
-                        m: 12.99, 
-                        l: 19.99,
-                        ingredients: "tomato sauce, prosciutto cotto, mozzarella, champignoi, artichoke, olives" 
-                    },
-                    { 
-                        name: 'Caprese Pizza', 
-                        s: 7.99, 
-                        m: 12.99, 
-                        l: 19.99,
-                        ingredients: "cherry tomato, mozzarella, basil, olive oil" 
-                    },
-                    { 
-                        name: 'Pizza al taglio', 
-                        s: 10.99, 
-                        m: 17.99, 
-                        l: 25.99,
-                        ingredients: `Pepperoni, garlic & spinach, onion, artichokes hearts, mushrooms, 
-                            prosciutto cotto`,
-                    },
-                    { 
-                        name: 'Pizza quattro formaggi', 
-                        s: 9.99, 
-                        m: 14.99, 
-                        l: 22.99,
-                        ingredients: "mozzarella, fontina, grana padano, gorgonzola, olive oil, basil" 
-                    },
-                    { 
-                        name: 'Pizza Margherita', 
-                        s: 7.99, 
-                        m: 12.99, 
-                        l: 19.99,
-                        ingredients: "mozzarella, tomato, basil" 
-                    },
-                    { 
-                        name: 'Pizza Napoletana', 
-                        s: 9.99, 
-                        m: 14.99, 
-                        l: 22.99,
-                        ingredients: "mozzarella, tomato, basil, olive oil, oregano" 
-                    },
-                ],
+                options: options,
                 orders: orders,
                 orderPizza: addPizza,
                 numOfOrders: numOfOrders,
                 removeOne: removeOne,
-                addOne: addOne
+                addOne: addOne,
+                error: error,
+                isLoading: isLoading,
             }}
         >
             {props.children}

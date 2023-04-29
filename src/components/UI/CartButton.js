@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import pizzaBox from "./pizzabox.svg";
 import CartContext from "../../store/cart-context";
 
