@@ -75,8 +75,9 @@ const MenuItem = props => {
                 <Button 
                     type="submit" 
                     className={`w-38 h-12 bg-black rounded-lg m-0.5 mx-auto 
-                    bg-orange-400 text-base hover:bg-orange-500 px-4`}
-                    valid={!isValid.valid}
+                    bg-orange-400 text-base hover:bg-orange-500 px-4 disabled:bg-orange-300
+                    disabled:text-gray-400 disabled:cursor-no-drop`}
+                    disabled={!isValid.valid}
                 >
                     Put in Your Orders
                 </Button>
