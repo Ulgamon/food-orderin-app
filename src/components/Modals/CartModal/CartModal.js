@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import CartContext from "../../../store/cart-context";
 import CartList from "../../Cart/CartList";
+import OrderForm from "./OrderForm";
 
 const Backdrop = props => {
     return (
@@ -30,6 +31,7 @@ const ModalOverlay = props => {
                 <hr className="bg-stone-800 h-0.5 w-full border-0" />
                 <div className="p-5 bg-stone-200 text-xl max-h-64 sm:max-h-80 lg:max-h-96 overflow-y-auto">
                     {props.orders.length > 0 ? <CartList orders={props.orders} /> : <p>Your pizza box is empty &#128557;</p>}
+                    {props.orders.length > 0 ? <OrderForm className="w-full bg-stone-200 text-xl" /> : ''}
                 </div>
                 <hr className="bg-stone-800 h-0.5 w-full border-0" />
                 <h4 className="bg-stone-200 text-2xl p-3">Total Amount: 
