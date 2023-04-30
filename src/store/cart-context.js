@@ -9,6 +9,7 @@ const CartContext = React.createContext({
     addOne: (name, size) => {},
     error: null,
     isLoading: false,
+    resetOrders: () => {},
 })
 
 const returnAmount = (orders) => {
@@ -26,6 +27,7 @@ export const CartContextProvider = (props) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
+    // HuseEffect hook for accessing localStorage
     useEffect(() => {
         if (localStorage.getItem("pizzaOrders")) {
             setOrders(JSON.parse(localStorage.getItem("pizzaOrders")));
@@ -37,6 +39,7 @@ export const CartContextProvider = (props) => {
         }
     }, []);
 
+    // function for fetching data from the server
     const fetchMenu = useCallback(async () => {
         setIsLoading(true);
         setError(null);
@@ -65,11 +68,12 @@ export const CartContextProvider = (props) => {
         setIsLoading(false);
     }, [])
     
-
+    // useEffect hook for fetching data when component mounts
     useEffect(() => {
         fetchMenu();
     }, [fetchMenu])
 
+    // function for adding pizzas to orders with no duplicates adding their amount or creating order if there is no one
     const addPizza = (pizza, size, amount) => {
         for (let order in orders) {
             if (pizza.name === orders[order].pizza.name && size === orders[order].size) {
@@ -92,6 +96,7 @@ export const CartContextProvider = (props) => {
         console.log(orders);
     }
 
+    // Function for removing one pizza from the given type
     const removeOne = (name, size) => {
         let index = orders.findIndex(element => (element.pizza.name === name && element.size === size));
         console.log(index);
@@ -113,6 +118,7 @@ export const CartContextProvider = (props) => {
         }
     }
 
+    // adding one pizza to the given order
     const addOne = (name, size) => {
         let index = orders.findIndex(element => (element.pizza.name === name && element.size === size));
         console.log(index);
@@ -127,6 +133,13 @@ export const CartContextProvider = (props) => {
         }
     }
 
+    // reset orders after successful order
+    const resetOrderAfterSuccessfulOrdering = () => {
+        setOrders([]);
+        setNumOfOrders(0);
+        localStorage.setItem("pizzaOrders", []);
+    }
+
     return (
         <CartContext.Provider
             value={{
@@ -138,6 +151,7 @@ export const CartContextProvider = (props) => {
                 addOne: addOne,
                 error: error,
                 isLoading: isLoading,
+                resetOrders: resetOrderAfterSuccessfulOrdering,
             }}
         >
             {props.children}

@@ -31,7 +31,11 @@ const ModalOverlay = props => {
                 <hr className="bg-stone-800 h-0.5 w-full border-0" />
                 <div className="p-5 bg-stone-200 text-xl max-h-64 sm:max-h-80 lg:max-h-96 overflow-y-auto">
                     {props.orders.length > 0 ? <CartList orders={props.orders} /> : <p>Your pizza box is empty &#128557;</p>}
-                    {props.orders.length > 0 ? <OrderForm className="w-full bg-stone-200 text-xl" /> : ''}
+                    <OrderForm 
+                        orders={props.orders} 
+                        totalAmount={totalAmount} 
+                        className="w-full bg-stone-200 text-xl" 
+                    />
                 </div>
                 <hr className="bg-stone-800 h-0.5 w-full border-0" />
                 <h4 className="bg-stone-200 text-2xl p-3">Total Amount: 
@@ -39,7 +43,7 @@ const ModalOverlay = props => {
                 </h4>
                 <footer className="text-xl py-3 bg-stone-200 flex rounded-b-lg">
                     <button 
-                        className="block p-2 px-6 hover:bg-emerald-500 ms-auto mr-1 rounded-full bg-stone-400"
+                        className="block p-2 px-6 hover:bg-red-500 ms-auto mr-6 mb-3 rounded-full bg-stone-400"
                         onClick={props.toggleCartModal}
                     >
                         Close
