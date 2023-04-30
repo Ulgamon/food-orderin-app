@@ -65,6 +65,8 @@ const MenuItem = props => {
                     <label className="text-base vertical-align ms-5 m-3 mb-4">
                         Amount:
                         <input 
+                            max="20"
+                            step='1'
                             className={`w-12 h-10 m-1 px-1 rounded-lg ms-3 outline-none ${isValid.style}`} 
                             type="number" 
                             onChange={isValidInput}

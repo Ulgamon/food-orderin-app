@@ -44,12 +44,6 @@ const ModalOverlay = props => {
                     >
                         Close
                     </button>
-                    <button 
-                        className="block p-2 px-6 bg-orange-500 mr-3 rounded-full hover:bg-emerald-500"
-                        onClick={props.toggleCartModal}
-                    >
-                        Order
-                    </button>
                 </footer>
             </div>
         </div>
