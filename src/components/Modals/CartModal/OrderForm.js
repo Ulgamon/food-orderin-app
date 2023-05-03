@@ -46,7 +46,7 @@ const OrderForm = (props) => {
         changeInputHandler: phoneInputHandler,
         blurInputHandler: phoneBlurHandler,
         reset: phoneReset,
-    } = useInput(value => /^[0-9]{3}-[0-9]{3}-[0-9]{4}/.test(value))
+    } = useInput(value => /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/.test(value))
 
     const {
         enteredValue: emailValue,
