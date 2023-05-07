@@ -45,7 +45,7 @@ const MenuItem = props => {
                 <p className="text-bold">{props.pizza.name}</p>
                 <p className="text-light italic text-sm sm:w-1/3">({props.pizza.ingredients})</p>
                 <p className="font-semibold text-stone-600 text-base sm:text-2xl">Price:  
-                    <strong className="font-semibold text-green-500 ms-0.5">{parseInt(currentPrice).toFixed(2)}$</strong>
+                    <strong className="font-semibold text-green-500 ms-0.5">{currentPrice.toFixed(2)}$</strong>
                 </p>
             </div>
             <form className="ms-auto p-0 m-0" onSubmit={submitHandler}>
